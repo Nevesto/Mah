@@ -1,0 +1,8 @@
+# bot token
+
+.env
+token.txt
+
+# node modules
+
+node_modules
