@@ -11,15 +11,18 @@ module.exports = {
         async execute(interaction:any) {
             const channel = interaction.channel;
             const number = interaction.options.getInteger('number');
+            
+            const module_messages = number / 100;
+            const resto = module_messages % 100;
 
-            const messages = await channel.messages.fetch({ limit: number });
+            await interaction.deferReply();
 
-            messages.forEach(async (message:any) => {
-                const deleted_messages = await message.delete();
-                // console.log(deleted_messages);
-            });
-
-            await interaction.reply(`Delete ${messages.size} messages.`);
-
+            for (let i = 0; i < module_messages; i++) {
+                await channel.bulkDelete(100)
+            }
+            
+            await channel.bulkDelete(resto)
+                .then(() => interaction.editReply(`Deleted ${number} messages.`).catch(() => {}))
+                .catch(() => interaction.editReply(`Could not delete messages.`).catch(() => {}))
         }
 }
